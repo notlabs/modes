@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_DB=modes
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - caddy
+
+  web:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./apps/web/dist:/usr/share/nginx/html
+    networks:
+      - caddy
+    depends_on:
+      - db
+
+networks:
+  caddy:
+    external: true

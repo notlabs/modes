@@ -14,7 +14,7 @@ module.exports = [
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
+          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js'],
           depConstraints: [
             {
               sourceTag: '*',
@@ -27,9 +27,11 @@ module.exports = [
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-    // Override or add rules here
-    rules: {
-      "prefer-arrow-functions": "warn"
-    },
+    // plugins: {
+    //   'prefer-arrow': require('eslint-plugin-prefer-arrow')
+    // },
+    // rules: {
+    //   "prefer-arrow/prefer-arrow-functions": "warn"
+    // },
   },
 ];
