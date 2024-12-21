@@ -5,6 +5,7 @@
     "ms-playwright.playwright",
     "prisma.prisma",
     "vitest.explorer",
-    "mikestead.dotenv"
+    "mikestead.dotenv",
+    "dbaeumer.vscode-eslint"
   ]
 }

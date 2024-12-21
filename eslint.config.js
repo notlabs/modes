@@ -4,12 +4,14 @@ module.exports = [
   ...nx.configs['flat/base'],
   ...nx.configs['flat/typescript'],
   ...nx.configs['flat/javascript'],
+  require('eslint-config-prettier'),
   {
     ignores: ['**/dist'],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@nx/enforce-module-boundaries': [
         'error',
         {
@@ -24,16 +26,13 @@ module.exports = [
         },
       ],
       'func-style': ['error', 'expression'],
-      'arrow-body-style': ['error', 'as-needed']
+      'arrow-body-style': ['error', 'as-needed'],
+      'import/no-default-export': 'error',
+      'prefer-arrow/prefer-arrow-functions': 'warn',
     },
-  },
-  {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-    // plugins: {
-    //   'prefer-arrow': require('eslint-plugin-prefer-arrow')
-    // },
-    // rules: {
-    //   "prefer-arrow/prefer-arrow-functions": "warn"
-    // },
+    plugins: {
+      'prefer-arrow': require('eslint-plugin-prefer-arrow'),
+      import: require('eslint-plugin-import'),
+    },
   },
 ];

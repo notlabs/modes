@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
-import { trpc } from '../utils/trpc';
+import { trpc } from '../trpc';
 import { ThemeProvider, createTheme } from '@mui/material';
 
 const theme = createTheme({
@@ -15,7 +15,7 @@ const theme = createTheme({
   },
 });
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export const Providers = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -34,4 +34,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
       </QueryClientProvider>
     </trpc.Provider>
   );
-}
+};
