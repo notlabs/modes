@@ -16,5 +16,9 @@
       "name": "🧪 web-e2e",
       "path": "apps/web-e2e"
     }
-  ]
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
