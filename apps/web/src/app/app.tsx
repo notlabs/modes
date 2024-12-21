@@ -31,6 +31,8 @@ export function App() {
 function ExampleList() {
   const { data, isLoading } = trpc.example.getAll.useQuery();
 
+
+
   if (isLoading) return <div>Loading your examples...</div>;
 
   return (

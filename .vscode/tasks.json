@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev Stack",
+      "dependsOrder": "parallel",
+      "dependsOn": ["web:serve", "api:serve", "api:prisma:watch", "api:prisma:studio"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "web:serve",
+      "type": "shell",
+      "command": "nx run web:serve",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "api:serve",
+      "type": "shell",
+      "command": "nx run api:serve",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "api:prisma:watch",
+      "type": "shell",
+      "command": "nx run api:prisma:watch",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "api:prisma:studio",
+      "type": "shell",
+      "command": "nx run api:prisma:studio",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

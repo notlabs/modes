@@ -11,6 +11,8 @@
     "@types/cors": "^2.8.17"
   },
   "scripts": {
-    "prisma:watch": "prisma generate --schema=prisma/schema.prisma --watch"
+    "prisma:watch": "prisma generate --watch",
+    "prisma:studio": "prisma studio",
+    "prisma:push": "prisma db push"
   }
 }

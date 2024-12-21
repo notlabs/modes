@@ -1,16 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  ERROR
 }
 
-model Example {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum MediaVariant {
+  THUMBNAIL
+  SMALL
+  MEDIUM
+  LARGE
+  ORIGINAL
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
   name        String
-  description String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  mediaItems  MediaItem[]
+  collections Collection[]
+  tags        Tag[]
+
+  @@map("users")
+}
+
+model MediaItem {
+  id               String         @id @default(cuid())
+  checksum         String         @unique
+  originalPath     String
+  originalFileName String
+  mimeType         String
+  fileSize         Int
+  metadata         Json
+  createdAt        DateTime       @default(now())
+  createdById      String
+  createdBy        User           @relation(fields: [createdById], references: [id])
+  mediaVersions    MediaVersion[]
+
+  @@index([checksum])
+  @@index([createdById])
+  @@map("media_items")
+}
+
+model MediaVersion {
+  id              String           @id @default(cuid())
+  mediaItemId     String
+  status          ProcessingStatus
+  processingError String?
+  createdAt       DateTime         @default(now())
+  createdById     String
+  mediaItem       MediaItem        @relation(fields: [mediaItemId], references: [id])
+  processedMedia  ProcessedMedia[]
+  mediaTags       MediaTag[]
+  collectionItems CollectionItem[]
+
+  @@index([mediaItemId])
+  @@index([status])
+  @@index([createdById])
+  @@map("media_versions")
+}
+
+model ProcessedMedia {
+  id             String       @id @default(cuid())
+  mediaVersionId String
+  variant        MediaVariant
+  path           String
+  width          Int
+  height         Int
+  fileSize       Int
+  createdAt      DateTime     @default(now())
+  mediaVersion   MediaVersion @relation(fields: [mediaVersionId], references: [id])
+
+  @@unique([mediaVersionId, variant])
+  @@index([mediaVersionId])
+  @@map("processed_media")
+}
+
+model Collection {
+  id                 String              @id @default(cuid())
+  name               String
+  description        String?
+  isPublic           Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  createdById        String
+  createdBy          User                @relation(fields: [createdById], references: [id])
+  collectionVersions CollectionVersion[]
+
+  @@index([createdById])
+  @@map("collections")
+}
+
+model CollectionVersion {
+  id              String           @id @default(cuid())
+  collectionId    String
+  name            String
+  description     String?
+  isPublic        Boolean
+  createdAt       DateTime         @default(now())
+  createdById     String
+  collection      Collection       @relation(fields: [collectionId], references: [id])
+  collectionItems CollectionItem[]
+
+  @@index([collectionId])
+  @@index([createdById])
+  @@map("collection_versions")
+}
+
+model CollectionItem {
+  id                  String            @id @default(cuid())
+  collectionVersionId String
+  mediaVersionId      String
+  sortOrder           Int
+  createdAt           DateTime          @default(now())
+  createdById         String
+  collectionVersion   CollectionVersion @relation(fields: [collectionVersionId], references: [id])
+  mediaVersion        MediaVersion      @relation(fields: [mediaVersionId], references: [id])
+
+  @@index([collectionVersionId])
+  @@index([mediaVersionId])
+  @@index([createdById])
+  @@map("collection_items")
+}
+
+model Tag {
+  id          String     @id @default(cuid())
+  namespace   String?
+  value       String
+  createdAt   DateTime   @default(now())
+  createdById String
+  createdBy   User       @relation(fields: [createdById], references: [id])
+  mediaTags   MediaTag[]
+
+  @@unique([namespace, value])
+  @@index([namespace])
+  @@index([value])
+  @@index([createdById])
+  @@map("tags")
+}
+
+model MediaTag {
+  id             String       @id @default(cuid())
+  mediaVersionId String
+  tagId          String
+  createdAt      DateTime     @default(now())
+  createdById    String
+  mediaVersion   MediaVersion @relation(fields: [mediaVersionId], references: [id])
+  tag            Tag          @relation(fields: [tagId], references: [id])
+
+  @@unique([mediaVersionId, tagId])
+  @@index([mediaVersionId])
+  @@index([tagId])
+  @@index([createdById])
+  @@map("media_tags")
 }
