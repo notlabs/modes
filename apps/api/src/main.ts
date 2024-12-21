@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { appRouter } from './routers/_app';
+import { appRouter } from './trpc/root';
 import { createContext } from './trpc/context';
 
 const host = process.env.HOST ?? 'localhost';

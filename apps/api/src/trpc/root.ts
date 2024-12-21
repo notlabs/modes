@@ -5,6 +5,7 @@ import { tagsRouter } from './routers/tags';
 import { usersRouter } from './routers/users';
 import { mediaVersionsRouter } from './routers/mediaVersions';
 import { processedMediaRouter } from './routers/processedMedia';
+import { systemRouter } from './routers/system';
 
 export const appRouter = router({
   media: mediaRouter,
@@ -12,6 +13,7 @@ export const appRouter = router({
   tags: tagsRouter,
   users: usersRouter,
   mediaVersions: mediaVersionsRouter,
-  processedMedia: processedMediaRouter
+  processedMedia: processedMediaRouter,
+  system: systemRouter,
 });
 export type AppRouter = typeof appRouter;

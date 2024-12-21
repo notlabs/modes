@@ -23,6 +23,8 @@ module.exports = [
           ],
         },
       ],
+      'func-style': ['error', 'expression'],
+      'arrow-body-style': ['error', 'as-needed']
     },
   },
   {

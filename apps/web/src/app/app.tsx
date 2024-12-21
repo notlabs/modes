@@ -1,10 +1,10 @@
-import { Route, Routes, Link } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
+import { DiskUsage } from './disk-usage';
 
-export function App() {
+export const App = () => {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -20,30 +20,10 @@ export function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <div>
-          <h1>My Examples</h1>
-          <ExampleList />
+          <DiskUsage />
         </div>
       </QueryClientProvider>
     </trpc.Provider>
-  );
-}
-
-function ExampleList() {
-  const { data, isLoading } = trpc.example.getAll.useQuery();
-
-
-
-  if (isLoading) return <div>Loading your examples...</div>;
-
-  return (
-    <div>
-      {data?.map((example) => (
-        <div key={example.id}>
-          <h2>{example.name}</h2>
-          <p>{example.description}</p>
-        </div>
-      ))}
-    </div>
   );
 }
 

@@ -1,11 +1,10 @@
 import express from 'express';
 import * as trpcExpress from '@trpc/server/adapters/express';
-import { appRouter } from './routers/_app';
+import { appRouter } from './trpc/root';
 import { createContext } from './trpc/context';
 
 const app = express();
 
-// Add a root route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the Modes API!' });
 });
