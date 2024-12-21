@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": "."
+    },
+    {
+      "name": "📱 web",
+      "path": "apps/web"
+    },
+    {
+      "name": "🖥️ api",
+      "path": "apps/api"
+    },
+    {
+      "name": "🧪 web-e2e",
+      "path": "apps/web-e2e"
+    }
+  ]
+}
