@@ -17,7 +17,23 @@ const theme = createTheme({
 });
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            useErrorBoundary: true,
+            refetchOnWindowFocus: false,
+          },
+          mutations: {
+            retry: false,
+            useErrorBoundary: true,
+          },
+        },
+      })
+  );
+
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [

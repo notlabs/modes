@@ -9,7 +9,6 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
 
-// Enable CORS
 app.use(cors());
 
 app.get('/', (req, res) => {
@@ -20,7 +19,7 @@ app.use(
   '/api/trpc',
   trpcExpress.createExpressMiddleware({
     router: appRouter,
-    createContext
+    createContext,
   })
 );
 

@@ -3,6 +3,9 @@ import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import { Providers } from './app/providers';
 import { AppRoutes } from './app/routes-config';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from './app/error-fallback';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,10 +13,16 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <BrowserRouter>
-      <Providers>
-        <AppRoutes />
-      </Providers>
-    </BrowserRouter>
+    <QueryErrorResetBoundary>
+      {({ reset }) => (
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
+          <BrowserRouter>
+            <Providers>
+              <AppRoutes />
+            </Providers>
+          </BrowserRouter>
+        </ErrorBoundary>
+      )}
+    </QueryErrorResetBoundary>
   </StrictMode>
 );
