@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { trpc } from '../trpc';
 import { ThemeProvider, createTheme } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const theme = createTheme({
   palette: {
@@ -44,12 +45,15 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     })
   );
 
+  const isDev = import.meta.env.DEV;
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <ThemeProvider theme={theme}>{children}</ThemeProvider>
         </HelmetProvider>
+        {isDev && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </trpc.Provider>
   );
