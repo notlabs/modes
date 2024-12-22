@@ -12,24 +12,53 @@ export const mediaRouter = router({
             include: {
               processedMedia: true,
               mediaTags: {
-                include: { tag: true }
-              }
-            }
-          }
-        }
+                include: { tag: true },
+              },
+            },
+          },
+        },
       });
     }),
-  
+
   listMediaItems: publicProcedure
-    .query(async ({ ctx }) => {
-      return ctx.db.mediaItem.findMany({
-        include: {
+
+    .input(
+      z.object({
+        page: z.number().default(0),
+        limit: z.number().default(100),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const items = await ctx.db.mediaItem.findMany({
+        skip: input.page * input.limit,
+        take: input.limit,
+        select: {
+          id: true,
+          originalFileName: true,
+          mimeType: true,
+          fileSize: true,
+          checksum: true,
           mediaVersions: {
-            include: {
-              processedMedia: true
-            }
-          }
-        }
+            select: {
+              processedMedia: {
+                select: {
+                  path: true,
+                },
+              },
+
+              mediaTags: {
+                select: {
+                  tag: {
+                    select: {
+                      value: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
-    })
+      return items;
+    }),
 });

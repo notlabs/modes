@@ -39,4 +39,7 @@ export default defineConfig({
       provider: 'v8',
     },
   },
+  define: {
+    'process.env.MEDIA_URL': JSON.stringify('https://m.untu.ms'),
+  },
 });
