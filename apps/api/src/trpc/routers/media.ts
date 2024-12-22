@@ -4,8 +4,8 @@ import { publicProcedure, router } from '../router';
 export const mediaRouter = router({
   getMediaItem: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.mediaItem.findUnique({
+    .query(async ({ ctx, input }) =>
+      ctx.db.mediaItem.findUnique({
         where: { id: input.id },
         include: {
           mediaVersions: {
@@ -17,11 +17,10 @@ export const mediaRouter = router({
             },
           },
         },
-      });
-    }),
+      })
+    ),
 
   listMediaItems: publicProcedure
-
     .input(
       z.object({
         page: z.number().default(0),
@@ -29,36 +28,43 @@ export const mediaRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const items = await ctx.db.mediaItem.findMany({
-        skip: input.page * input.limit,
-        take: input.limit,
-        select: {
-          id: true,
-          originalFileName: true,
-          mimeType: true,
-          fileSize: true,
-          checksum: true,
-          mediaVersions: {
-            select: {
-              processedMedia: {
-                select: {
-                  path: true,
+      const [items, count] = await Promise.all([
+        ctx.db.mediaItem.findMany({
+          skip: input.page * input.limit,
+          take: input.limit,
+          select: {
+            id: true,
+            originalFileName: true,
+            mimeType: true,
+            fileSize: true,
+            checksum: true,
+            mediaVersions: {
+              select: {
+                processedMedia: {
+                  select: {
+                    path: true,
+                  },
                 },
-              },
 
-              mediaTags: {
-                select: {
-                  tag: {
-                    select: {
-                      value: true,
+                mediaTags: {
+                  select: {
+                    tag: {
+                      select: {
+                        value: true,
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
-      return items;
+        }),
+        ctx.db.mediaItem.count(),
+      ]);
+
+      return {
+        items,
+        totalCount: count,
+      };
     }),
 });
