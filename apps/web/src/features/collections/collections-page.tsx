@@ -1,18 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { Page } from '../../shared/ui/page';
 
 export const CollectionsPage = () => (
-  <>
-    <Helmet>
-      <title>Collections | modes</title>
-    </Helmet>
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Collections
-      </Typography>
-      <Typography variant="body1">
-        Your collections will be displayed here.
-      </Typography>
-    </Box>
-  </>
+  <Page title="Browse">
+    <Typography variant="body1">Placeholder.</Typography>
+  </Page>
 );

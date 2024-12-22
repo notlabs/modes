@@ -30,10 +30,12 @@ module.exports = [
       'import/no-default-export': 'error',
       'prefer-arrow/prefer-arrow-functions': 'warn',
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      // 'unused-imports/no-unused-imports': 'error',
     },
     plugins: {
       'prefer-arrow': require('eslint-plugin-prefer-arrow'),
       import: require('eslint-plugin-import'),
+      // 'unused-imports': require('eslint-plugin-unused-imports'),
     },
   },
 ];
