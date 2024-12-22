@@ -15,6 +15,10 @@ export const routes = {
       id: z.string(),
     }),
   },
+  browse: {
+    path: '/browse' as const,
+    params: null,
+  },
 } as const;
 
 export type AppRoute = typeof routes;
@@ -25,6 +29,7 @@ export const createUrl = {
   collection: (id: string) => `/collections/${id}` as const,
   dashboard: () => '/dashboard' as const,
   root: () => '/' as const,
+  browse: () => '/browse' as const,
 };
 
 export const getRouteParams = {
