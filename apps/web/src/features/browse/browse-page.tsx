@@ -1,5 +1,9 @@
 import { Box } from '@mui/material';
-import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridRenderCellParams,
+  type GridSortModel,
+} from '@mui/x-data-grid';
 import { Page } from '../../shared/ui/page';
 import { trpc } from '../../trpc';
 import { useState } from 'react';
@@ -12,9 +16,14 @@ export const BrowsePage = () => {
     page: 0,
   });
 
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
   const { data: mediaData } = trpc.media.listMediaItems.useQuery({
     page: paginationModel.page,
     limit: paginationModel.pageSize,
+    sortField: sortModel[0]?.field,
+
+    sortDirection: sortModel[0]?.sort as 'asc' | 'desc' | undefined,
   });
 
   const columns = [
@@ -22,6 +31,7 @@ export const BrowsePage = () => {
       field: 'thumbnail',
       headerName: 'Preview',
       width: 100,
+      sortable: false,
       renderCell: (params: GridRenderCellParams) => (
         <img
           src={`${MEDIA_URL}/${params.value}`}
@@ -35,16 +45,21 @@ export const BrowsePage = () => {
         />
       ),
     },
-    { field: 'originalFileName', headerName: 'File Name', width: 200 },
-    { field: 'mimeType', headerName: 'Type', width: 130 },
-    { field: 'fileSize', headerName: 'Size', width: 130 },
-    { field: 'checksum', headerName: 'Checksum', width: 200 },
 
+    {
+      field: 'originalFileName',
+      headerName: 'File Name',
+      width: 200,
+      sortable: true,
+    },
+    { field: 'mimeType', headerName: 'Type', width: 130, sortable: true },
+    { field: 'fileSize', headerName: 'Size', width: 130, sortable: true },
+    { field: 'checksum', headerName: 'Checksum', width: 200, sortable: true },
     {
       field: 'tags',
       headerName: 'Tags',
       width: 200,
-
+      sortable: false,
       valueFormatter: (params: GridRenderCellParams) => {
         const tags = params.value || [];
         return tags.join(', ');
@@ -74,6 +89,9 @@ export const BrowsePage = () => {
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
+          sortingMode="server"
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
         />
       </Box>
     </Page>

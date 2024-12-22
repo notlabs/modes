@@ -25,6 +25,8 @@ export const mediaRouter = router({
       z.object({
         page: z.number().default(0),
         limit: z.number().default(100),
+        sortField: z.string().optional(),
+        sortDirection: z.enum(['asc', 'desc']).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -32,6 +34,11 @@ export const mediaRouter = router({
         ctx.db.mediaItem.findMany({
           skip: input.page * input.limit,
           take: input.limit,
+          orderBy: input.sortField
+            ? {
+                [input.sortField]: input.sortDirection || 'asc',
+              }
+            : undefined,
           select: {
             id: true,
             originalFileName: true,
@@ -45,7 +52,6 @@ export const mediaRouter = router({
                     path: true,
                   },
                 },
-
                 mediaTags: {
                   select: {
                     tag: {
