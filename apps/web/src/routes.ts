@@ -1,12 +1,12 @@
 import { z } from 'zod';
-
 export const routes = {
   root: {
     path: '/' as const,
     params: null,
   },
-  dashboard: {
-    path: '/dashboard' as const,
+
+  collections: {
+    path: '/collections' as const,
     params: null,
   },
   collection: {
