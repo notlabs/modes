@@ -3,6 +3,7 @@ import { httpBatchLink } from '@trpc/client';
 import { useState } from 'react';
 import { trpc } from '../trpc';
 import { ThemeProvider, createTheme } from '@mui/material';
+import { HelmetProvider } from 'react-helmet-async';
 
 const theme = createTheme({
   palette: {
@@ -30,7 +31,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <HelmetProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </HelmetProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );
