@@ -29,6 +29,7 @@ module.exports = [
       'arrow-body-style': ['error', 'as-needed'],
       'import/no-default-export': 'error',
       'prefer-arrow/prefer-arrow-functions': 'warn',
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     },
     plugins: {
       'prefer-arrow': require('eslint-plugin-prefer-arrow'),
