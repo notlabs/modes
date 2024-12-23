@@ -1,54 +1,21 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Alert,
   Box,
   Button,
+  Grow,
   Paper,
   TextField,
   Typography,
 } from '@mui/material';
-import { TRPCClientError } from '@trpc/client';
-import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { trpc } from '../../trpc';
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-type LoginFormInputs = z.infer<typeof loginSchema>;
+import { useAuth } from './hooks';
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { login, form, handleLogin, getErrorMessage } = useAuth();
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const login = trpc.auth.login.useMutation({
-    useErrorBoundary: (error) => {
-      if (error instanceof TRPCClientError) {
-        return error?.data.code !== 'UNAUTHORIZED';
-      }
-      return true;
-    },
-    onSuccess: ({ token }) => {
-      localStorage.setItem('token', token);
-      const params = new URLSearchParams(location.search);
-      const returnUrl = params.get('returnUrl') || '/';
-      navigate(returnUrl);
-    },
-  });
-
-  console.error(login.error);
-
-  const onSubmit = handleSubmit((data) => login.mutate(data));
+  } = form;
 
   return (
     <Box
@@ -65,14 +32,14 @@ export const LoginPage = () => {
         </Typography>
 
         {login.error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {login.error instanceof TRPCClientError
-              ? login.error.message
-              : 'An error occurred during login'}
-          </Alert>
+          <Grow in={!!login.error}>
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {getErrorMessage(login.error)}
+            </Alert>
+          </Grow>
         )}
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleLogin}>
           <TextField
             fullWidth
             label="Email"
