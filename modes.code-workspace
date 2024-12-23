@@ -37,6 +37,10 @@
       "**/.nx": true,
       "**/node_modules": true,
       "**/storybook-static": true
+    },
+    "[prisma]": {
+      "editor.defaultFormatter": "Prisma.prisma",
+      "editor.formatOnSave": true
     }
   }
 }
