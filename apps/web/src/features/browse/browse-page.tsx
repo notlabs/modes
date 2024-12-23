@@ -5,6 +5,7 @@ import {
   type GridRenderCellParams,
   type GridSortModel,
 } from '@mui/x-data-grid';
+import { User } from 'apps/api/src/types';
 import { useState } from 'react';
 import { Page } from '../../shared/ui/page';
 import { trpc } from '../../trpc';
@@ -70,12 +71,8 @@ export const BrowsePage = () => {
       headerName: 'Tags',
       width: 200,
       sortable: false,
-      valueFormatter: (params: GridRenderCellParams) => {
-        const tags = params.value || [];
-        return tags.join(', ');
-      },
+      valueFormatter: (params: string[]) => params.join(', '),
     },
-
     {
       field: 'createdAt',
       headerName: 'Created At',
@@ -84,14 +81,12 @@ export const BrowsePage = () => {
       valueFormatter: (date: string) => new Date(date).toLocaleString(),
       type: 'dateTime',
     },
-
     {
       field: 'createdBy',
       headerName: 'Created By',
       width: 150,
 
-      valueGetter: (params: GridRenderCellParams) =>
-        params.value?.name || params.value?.email,
+      valueGetter: (params: User) => params?.name || params?.email,
     },
   ];
 
