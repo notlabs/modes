@@ -7,6 +7,8 @@ export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const navItems = Object.values(routes).filter(({ showInNav }) => showInNav);
+
   return (
     <AppBar position="static" color="default">
       <Box
@@ -20,10 +22,9 @@ export const Navigation = () => {
           value={location.pathname}
           onChange={(_, value) => navigate(value)}
         >
-          <Tab label="Dashboard" value={routes.root.path} />
-          <Tab label="Browse" value={routes.browse.path} />
-          <Tab label="Collections" value={routes.collections.path} />
-          <Tab label="Admin" value={routes.admin.path} />
+          {navItems.map((route) => (
+            <Tab key={route.path} label={route.label} value={route.path} />
+          ))}
         </Tabs>
         <Box sx={{ mr: 2 }}>
           <LogoutButton />
