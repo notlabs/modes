@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { router } from '../router';
 import { hashPassword } from '../../utils/auth';
 import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const adminRouter = router({
   listUsers: protectedProcedure.query(async ({ ctx }) =>

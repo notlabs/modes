@@ -1,25 +1,26 @@
-import { useState } from 'react';
-import { trpc } from '../../trpc';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableContainer,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
   TextField,
 } from '@mui/material';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { useState } from 'react';
+import { trpc } from '../../trpc';
 
 export const AdminPage = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const { data: users } = trpc.admin.listUsers.useQuery();
   const setPassword = trpc.admin.setPassword.useMutation({
@@ -28,6 +29,33 @@ export const AdminPage = () => {
       setNewPassword('');
     },
   });
+
+  const handlePasswordReset = () => {
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      return;
+    }
+
+    if (selectedUserId) {
+      setPassword.mutate(
+        {
+          userId: selectedUserId,
+          newPassword,
+        },
+        {
+          onSuccess: () => {
+            // Show success message
+            setPasswordError('');
+            setSelectedUserId(null);
+            setNewPassword('');
+          },
+          onError: (error) => {
+            setPasswordError(error.message);
+          },
+        }
+      );
+    }
+  };
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -74,25 +102,21 @@ export const AdminPage = () => {
           <TextField
             type="password"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setPasswordError('');
+            }}
             placeholder="Enter new password"
             fullWidth
             margin="dense"
+            error={!!passwordError}
+            helperText={passwordError}
+            autoComplete="new-password"
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSelectedUserId(null)}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              if (selectedUserId) {
-                setPassword.mutate({
-                  userId: selectedUserId,
-                  newPassword,
-                });
-              }
-            }}
-          >
+          <Button variant="contained" onClick={handlePasswordReset}>
             Save Password
           </Button>
         </DialogActions>

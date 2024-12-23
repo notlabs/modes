@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { userWithRelationsSchema } from '../../schemas/user';
+import { hashPassword } from '../../utils/auth';
 import { protectedProcedure } from '../middleware/auth';
 import { router } from '../router';
 
@@ -29,4 +30,19 @@ export const usersRouter = router({
         },
       })
     ),
+
+  resetPassword: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        newPassword: z.string().min(8),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const passwordHash = await hashPassword(input.newPassword);
+      return ctx.db.user.update({
+        where: { id: input.userId },
+        data: { passwordHash },
+      });
+    }),
 });

@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client';
 import { useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
 import { trpc } from '../trpc';
 
 const theme = createTheme({
@@ -18,6 +19,20 @@ const theme = createTheme({
 });
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+
+  const handleAuthError = (error: unknown) => {
+    if (
+      error instanceof TRPCClientError &&
+      error.data?.code === 'UNAUTHORIZED'
+    ) {
+      const returnUrl = encodeURIComponent(window.location.pathname);
+      navigate(`/login?returnUrl=${returnUrl}`);
+      return false;
+    }
+    return true;
+  };
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -25,33 +40,13 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
           queries: {
             retry: false,
             refetchOnWindowFocus: false,
-            useErrorBoundary: (error: unknown) => {
-              // Handle auth errors separately from error boundary
-              if (
-                error instanceof TRPCClientError &&
-                error.data?.code === 'UNAUTHORIZED'
-              ) {
-                const returnUrl = encodeURIComponent(window.location.pathname);
-                window.location.href = `/login?returnUrl=${returnUrl}`;
-                return false;
-              }
-              // All other errors should go to error boundary
-              return true;
-            },
+
+            useErrorBoundary: handleAuthError,
           },
           mutations: {
             retry: false,
-            useErrorBoundary: (error: unknown) => {
-              if (
-                error instanceof TRPCClientError &&
-                error.data?.code === 'UNAUTHORIZED'
-              ) {
-                const returnUrl = encodeURIComponent(window.location.pathname);
-                window.location.href = `/login?returnUrl=${returnUrl}`;
-                return false;
-              }
-              return true;
-            },
+
+            useErrorBoundary: handleAuthError,
           },
         },
       })
@@ -62,6 +57,12 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       links: [
         httpBatchLink({
           url: 'http://localhost:3000/api/trpc',
+          headers: () => {
+            const token = localStorage.getItem('token');
+            return {
+              Authorization: token ? `Bearer ${token}` : '',
+            };
+          },
         }),
         loggerLink({
           enabled: () => import.meta.env.DEV,
