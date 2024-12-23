@@ -1,26 +1,52 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { TRPCClientError } from '@trpc/client';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 import { trpc } from '../../trpc';
 
-type LoginFormInputs = {
-  email: string;
-  password: string;
-};
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormInputs>();
+  } = useForm<LoginFormInputs>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const login = trpc.auth.login.useMutation({
+    // meta: {
+    //   errorBoundary: false,
+    // },
+    // useErrorBoundary: false,
+    useErrorBoundary: (error) => {
+      console.log(312312312312341, error.data);
+      // Return false for errors we want to handle locally
+      if (error instanceof TRPCClientError) {
+        switch (error.data?.code) {
+          case 'UNAUTHORIZED':
+          case 'BAD_REQUEST':
+          case 'TOO_MANY_REQUESTS':
+            return false;
+          default:
+            return true;
+        }
+      }
+      return true;
+    },
     onError: (error) => {
       console.error('Login error:', error);
+      return false;
     },
     onSuccess: ({ token }) => {
       localStorage.setItem('token', token);
@@ -51,13 +77,7 @@ export const LoginPage = () => {
             fullWidth
             label="Email"
             type="email"
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address',
-              },
-            })}
+            {...register('email')}
             error={!!errors.email}
             helperText={errors.email?.message}
             margin="normal"
@@ -66,13 +86,7 @@ export const LoginPage = () => {
             fullWidth
             label="Password"
             type="password"
-            {...register('password', {
-              required: 'Password is required',
-              minLength: {
-                value: 6,
-                message: 'Password must be at least 6 characters',
-              },
-            })}
+            {...register('password')}
             error={!!errors.password}
             helperText={errors.password?.message}
             margin="normal"

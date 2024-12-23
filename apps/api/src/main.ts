@@ -1,6 +1,6 @@
-import express from 'express';
-import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import cors from 'cors';
+import express from 'express';
 import { appRouter } from './trpc/root';
 import { createContext } from './trpc/router';
 
@@ -20,5 +20,6 @@ app.use(
 );
 
 app.listen(port, host, () => {
+  // TODO: logging
   console.log(`[ ready ] http://${host}:${port}`);
 });
