@@ -1,15 +1,15 @@
 import { Box } from '@mui/material';
 import {
   DataGrid,
+  GridFilterModel,
   type GridRenderCellParams,
   type GridSortModel,
 } from '@mui/x-data-grid';
+import { useState } from 'react';
 import { Page } from '../../shared/ui/page';
 import { trpc } from '../../trpc';
-import { useState } from 'react';
 
 const MEDIA_URL = process.env.MEDIA_URL;
-
 export const BrowsePage = () => {
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
@@ -17,12 +17,20 @@ export const BrowsePage = () => {
   });
 
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: [],
+  });
 
   const { data: mediaData } = trpc.media.listMediaItems.useQuery({
     page: paginationModel.page,
     limit: paginationModel.pageSize,
     sortField: sortModel[0]?.field,
-    sortDirection: sortModel[0]?.sort as 'asc' | 'desc' | undefined,
+    sortDirection: sortModel[0]?.sort ?? undefined,
+    filters: filterModel.items.map((filter) => ({
+      field: filter.field,
+      value: filter.value as string,
+      operator: filter.operator,
+    })),
   });
 
   const columns = [
@@ -89,8 +97,11 @@ export const BrowsePage = () => {
           pageSizeOptions={[10, 25, 50]}
           paginationMode="server"
           sortingMode="server"
+          filterMode="server"
           sortModel={sortModel}
           onSortModelChange={setSortModel}
+          filterModel={filterModel}
+          onFilterModelChange={setFilterModel}
         />
       </Box>
     </Page>
