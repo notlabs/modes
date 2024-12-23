@@ -41,7 +41,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist/storybook/web'
+          path: 'apps/web/storybook-static'
 
       - uses: actions/deploy-pages@v4
         id: deployment
