@@ -1,24 +1,24 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '../router';
+import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const tagsRouter = router({
-  getTag: publicProcedure
+  getTag: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.tag.findUnique({
+    .query(async ({ ctx, input }) =>
+      ctx.db.tag.findUnique({
         where: { id: input.id },
         include: {
-          mediaTags: true
-        }
-      });
-    }),
+          mediaTags: true,
+        },
+      })
+    ),
 
-  listTags: publicProcedure
-    .query(async ({ ctx }) => {
-      return ctx.db.tag.findMany({
-        include: {
-          mediaTags: true
-        }
-      });
+  listTags: protectedProcedure.query(async ({ ctx }) =>
+    ctx.db.tag.findMany({
+      include: {
+        mediaTags: true,
+      },
     })
+  ),
 });

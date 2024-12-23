@@ -13,16 +13,16 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <QueryErrorResetBoundary>
-      {({ reset }) => (
-        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
-          <BrowserRouter>
+    <BrowserRouter>
+      <QueryErrorResetBoundary>
+        {({ reset }) => (
+          <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
             <Providers>
               <RoutesConfig />
             </Providers>
-          </BrowserRouter>
-        </ErrorBoundary>
-      )}
-    </QueryErrorResetBoundary>
+          </ErrorBoundary>
+        )}
+      </QueryErrorResetBoundary>
+    </BrowserRouter>
   </StrictMode>
 );

@@ -1,10 +1,10 @@
 import { z } from 'zod';
+
 export const routes = {
   root: {
     path: '/' as const,
     params: null,
   },
-
   collections: {
     path: '/collections' as const,
     params: null,
@@ -38,6 +38,7 @@ export const createUrl = {
   dashboard: () => '/dashboard' as const,
   root: () => '/' as const,
   browse: () => '/browse' as const,
+  admin: () => '/admin' as const,
 };
 
 export const getRouteParams = {

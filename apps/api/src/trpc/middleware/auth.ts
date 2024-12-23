@@ -1,13 +1,14 @@
 import { TRPCError } from '@trpc/server';
 import { middleware, publicProcedure } from '../router';
 import { verifyToken } from '../../utils/auth';
+import { AuthErrorCode } from '../../types';
 
 export const authMiddleware = middleware(async ({ ctx, next }) => {
   const token = ctx.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
+      code: AuthErrorCode.UNAUTHORIZED,
       message: 'Missing authentication token',
     });
   }
@@ -23,16 +24,22 @@ export const authMiddleware = middleware(async ({ ctx, next }) => {
     return next({
       ctx: {
         ...ctx,
-
         user,
       },
     });
   } catch (error) {
+    const code =
+      error instanceof Error && error.message.includes('jwt expired')
+        ? 'UNAUTHORIZED'
+        : 'FORBIDDEN';
+
     throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: `Invalid token: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`,
+      code,
+      message: error instanceof Error ? error.message : 'Invalid token',
+      cause:
+        error instanceof Error && error.message.includes('jwt expired')
+          ? AuthErrorCode.TOKEN_EXPIRED
+          : AuthErrorCode.TOKEN_INVALID,
     });
   }
 });

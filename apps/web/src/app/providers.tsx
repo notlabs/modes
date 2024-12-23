@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { httpBatchLink } from '@trpc/client';
+import { httpBatchLink, TRPCClientError } from '@trpc/client';
 import { useState } from 'react';
 import { trpc } from '../trpc';
 import { ThemeProvider, createTheme } from '@mui/material';
@@ -24,12 +24,34 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         defaultOptions: {
           queries: {
             retry: false,
-            useErrorBoundary: true,
             refetchOnWindowFocus: false,
+            useErrorBoundary: (error: unknown) => {
+              // Handle auth errors separately from error boundary
+              if (
+                error instanceof TRPCClientError &&
+                error.data?.code === 'UNAUTHORIZED'
+              ) {
+                const returnUrl = encodeURIComponent(window.location.pathname);
+                window.location.href = `/login?returnUrl=${returnUrl}`;
+                return false;
+              }
+              // All other errors should go to error boundary
+              return true;
+            },
           },
           mutations: {
             retry: false,
-            useErrorBoundary: true,
+            useErrorBoundary: (error: unknown) => {
+              if (
+                error instanceof TRPCClientError &&
+                error.data?.code === 'UNAUTHORIZED'
+              ) {
+                const returnUrl = encodeURIComponent(window.location.pathname);
+                window.location.href = `/login?returnUrl=${returnUrl}`;
+                return false;
+              }
+              return true;
+            },
           },
         },
       })

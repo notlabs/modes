@@ -1,7 +1,9 @@
-import { z } from 'zod';
-import { router, publicProcedure } from '../router';
-import { hashPassword, verifyPassword, createToken } from '../../utils/auth';
 import { faker } from '@faker-js/faker';
+import { z } from 'zod';
+import { userSchema } from '../../schemas/user';
+import { createToken, hashPassword, verifyPassword } from '../../utils/auth';
+import { protectedProcedure } from '../middleware/auth';
+import { publicProcedure, router } from '../router';
 
 export const authRouter = router({
   register: publicProcedure
@@ -12,6 +14,7 @@ export const authRouter = router({
         name: z.string().optional(),
       })
     )
+    .output(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const passwordHash = await hashPassword(input.password);
       const user = await ctx.db.user.create({
@@ -32,6 +35,7 @@ export const authRouter = router({
         password: z.string(),
       })
     )
+    .output(z.object({ token: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.db.user.findUnique({
         where: { email: input.email },
@@ -44,4 +48,14 @@ export const authRouter = router({
       const token = createToken(user.id);
       return { token };
     }),
+
+  validate: protectedProcedure
+    .output(z.object({ user: userSchema }))
+    .query(async ({ ctx }) => ({
+      user: {
+        id: ctx.user.id,
+        email: ctx.user.email,
+        name: ctx.user.name,
+      },
+    })),
 });

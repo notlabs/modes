@@ -1,24 +1,24 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '../router';
+import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const processedMediaRouter = router({
-  getProcessedMedia: publicProcedure
+  getProcessedMedia: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.processedMedia.findUnique({
+    .query(async ({ ctx, input }) =>
+      ctx.db.processedMedia.findUnique({
         where: { id: input.id },
         include: {
-          mediaVersion: true
-        }
-      });
-    }),
+          mediaVersion: true,
+        },
+      })
+    ),
 
-  listProcessedMedia: publicProcedure
-    .query(async ({ ctx }) => {
-      return ctx.db.processedMedia.findMany({
-        include: {
-          mediaVersion: true
-        }
-      });
+  listProcessedMedia: protectedProcedure.query(async ({ ctx }) =>
+    ctx.db.processedMedia.findMany({
+      include: {
+        mediaVersion: true,
+      },
     })
+  ),
 });

@@ -1,7 +1,8 @@
-import { publicProcedure, router } from '../router';
+import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const statsRouter = router({
-  getOverview: publicProcedure.query(async ({ ctx }) => {
+  getOverview: protectedProcedure.query(async ({ ctx }) => {
     const [
       userCount,
       mediaCount,
@@ -25,7 +26,7 @@ export const statsRouter = router({
     };
   }),
 
-  getDetailedMediaStats: publicProcedure.query(async ({ ctx }) => {
+  getDetailedMediaStats: protectedProcedure.query(async ({ ctx }) => {
     const byMimeType = await ctx.db.mediaItem.groupBy({
       by: ['mimeType'],
       _count: true,

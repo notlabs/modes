@@ -1,23 +1,36 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Paper, TextField, Button, Typography, Box } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { trpc } from '../../trpc';
+
+type LoginFormInputs = {
+  email: string;
+  password: string;
+};
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormInputs>();
 
   const login = trpc.auth.login.useMutation({
+    onError: (error) => {
+      console.error('Login error:', error);
+    },
     onSuccess: ({ token }) => {
       localStorage.setItem('token', token);
-
       const params = new URLSearchParams(location.search);
       const returnUrl = params.get('returnUrl') || '/';
       navigate(returnUrl);
     },
   });
+
+  const onSubmit = handleSubmit((data) => login.mutate(data));
 
   return (
     <Box
@@ -25,7 +38,6 @@ export const LoginPage = () => {
         height: '100vh',
         display: 'flex',
         alignItems: 'center',
-
         justifyContent: 'center',
       }}
     >
@@ -34,29 +46,36 @@ export const LoginPage = () => {
           Login
         </Typography>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            login.mutate({ email, password });
-          }}
-        >
+        <form onSubmit={onSubmit}>
           <TextField
             fullWidth
             label="Email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register('email', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address',
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
             margin="normal"
-            required
           />
           <TextField
             fullWidth
             label="Password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters',
+              },
+            })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
             margin="normal"
-            required
           />
 
           <Button
@@ -64,7 +83,7 @@ export const LoginPage = () => {
             variant="contained"
             type="submit"
             sx={{ mt: 2 }}
-            disabled={login.isLoading}
+            disabled={isSubmitting || login.isLoading}
           >
             {login.isLoading ? 'Logging in...' : 'Login'}
           </Button>

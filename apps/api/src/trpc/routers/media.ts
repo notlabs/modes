@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '../router';
+import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const mediaRouter = router({
-  getMediaItem: publicProcedure
+  getMediaItem: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) =>
       ctx.db.mediaItem.findUnique({
@@ -20,7 +21,7 @@ export const mediaRouter = router({
       })
     ),
 
-  listMediaItems: publicProcedure
+  listMediaItems: protectedProcedure
     .input(
       z.object({
         page: z.number().default(0),

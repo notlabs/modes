@@ -1,28 +1,32 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '../router';
+import { userWithRelationsSchema } from '../../schemas/user';
+import { protectedProcedure } from '../middleware/auth';
+import { router } from '../router';
 
 export const usersRouter = router({
-  getUser: publicProcedure
+  getUser: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.db.user.findUnique({
+    .output(userWithRelationsSchema)
+    .query(async ({ ctx, input }) =>
+      ctx.db.user.findUnique({
         where: { id: input.id },
         include: {
           mediaItems: true,
           collections: true,
-          tags: true
-        }
-      });
-    }),
+          tags: true,
+        },
+      })
+    ),
 
-  listUsers: publicProcedure
-    .query(async ({ ctx }) => {
-      return ctx.db.user.findMany({
+  listUsers: protectedProcedure
+    .output(z.array(userWithRelationsSchema))
+    .query(async ({ ctx }) =>
+      ctx.db.user.findMany({
         include: {
           mediaItems: true,
           collections: true,
-          tags: true
-        }
-      });
-    })
+          tags: true,
+        },
+      })
+    ),
 });
