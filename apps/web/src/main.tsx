@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import { Providers } from './app/providers';
-import { AppRoutes } from './app/routes-config';
+import { RoutesConfig } from './app/routes-config';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from './app/error-fallback';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
@@ -18,7 +18,7 @@ root.render(
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
           <BrowserRouter>
             <Providers>
-              <AppRoutes />
+              <RoutesConfig />
             </Providers>
           </BrowserRouter>
         </ErrorBoundary>

@@ -6,8 +6,9 @@ import { CollectionDetailsPage } from '../features/collections/collection-detail
 import { AppLayout } from './app-layout';
 import { BrowsePage } from '../features/browse/browse-page';
 import { AdminPage } from '../features/admin/admin-page';
+import { LoginPage } from '../features/auth/login-page';
 
-export const AppRoutes = () => (
+export const RoutesConfig = () => (
   <Routes>
     <Route element={<AppLayout />}>
       <Route path={routes.root.path} element={<DashboardPage />} />
@@ -19,6 +20,7 @@ export const AppRoutes = () => (
       />
       <Route path={routes.browse.path} element={<BrowsePage />} />
       <Route path={routes.admin.path} element={<AdminPage />} />
+      <Route path={routes.login.path} element={<LoginPage />} />
     </Route>
   </Routes>
 );
