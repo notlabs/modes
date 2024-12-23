@@ -1,4 +1,9 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# http://help.github.com/ignore-files/
+
+# Environment
+.env
+.env.*
+!.env.example
 
 # compiled output
 dist
