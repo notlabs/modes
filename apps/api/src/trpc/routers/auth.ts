@@ -41,7 +41,10 @@ export const authRouter = router({
         where: { email: input.email },
       });
 
-      if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
+      const isValidCredentials =
+        user && (await verifyPassword(input.password, user.passwordHash));
+
+      if (!isValidCredentials) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: 'Invalid credentials',
