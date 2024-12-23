@@ -38,4 +38,10 @@ module.exports = [
       // 'unused-imports': require('eslint-plugin-unused-imports'),
     },
   },
+  {
+    files: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'import/no-default-export': 'off',
+    },
+  },
 ];
