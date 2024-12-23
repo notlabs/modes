@@ -1,9 +1,9 @@
-import { type inferRouterOutputs } from '@trpc/server';
+import { inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import { http, HttpResponse } from 'msw';
 import { type AppRouter } from './root';
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-// type RouterInput = inferRouterInputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type RouterInput = inferRouterInputs<AppRouter>;
 
 type TRPCResponse<T> = [
   {

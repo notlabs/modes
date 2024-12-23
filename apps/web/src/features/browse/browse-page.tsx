@@ -1,9 +1,11 @@
 import { Box, Dialog } from '@mui/material';
 import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid';
-import { User } from 'apps/api/src/types';
+import type { RouterOutput } from 'apps/api';
 import { useState } from 'react';
 import { Page } from '../../shared/ui/page';
 import { trpc } from '../../trpc';
+
+type MediaItem = RouterOutput['media']['listMediaItems']['items'][0];
 
 const MEDIA_URL = process.env.MEDIA_URL;
 export const BrowsePage = () => {
@@ -66,18 +68,18 @@ export const BrowsePage = () => {
       headerName: 'Created At',
       width: 180,
 
-      valueFormatter: (date: string) => new Date(date).toLocaleString(),
-      type: 'dateTime',
+      valueFormatter: (params: GridRenderCellParams<MediaItem, Date>) =>
+        params.value?.toLocaleString(),
     },
     {
       field: 'createdBy',
       headerName: 'Created By',
       width: 150,
 
-      valueGetter: (params: User) => params?.name || params?.email,
+      valueGetter: (params: GridRenderCellParams<MediaItem>) =>
+        params.value?.name || params.value?.email,
     },
-  ];
-
+  ] as const;
   const rows =
     mediaData?.items.map((item) => ({
       id: item.id,
