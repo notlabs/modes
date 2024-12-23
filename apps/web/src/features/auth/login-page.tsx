@@ -1,5 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { TRPCClientError } from '@trpc/client';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -25,28 +32,11 @@ export const LoginPage = () => {
   });
 
   const login = trpc.auth.login.useMutation({
-    // meta: {
-    //   errorBoundary: false,
-    // },
-    // useErrorBoundary: false,
     useErrorBoundary: (error) => {
-      console.log(312312312312341, error.data);
-      // Return false for errors we want to handle locally
       if (error instanceof TRPCClientError) {
-        switch (error.data?.code) {
-          case 'UNAUTHORIZED':
-          case 'BAD_REQUEST':
-          case 'TOO_MANY_REQUESTS':
-            return false;
-          default:
-            return true;
-        }
+        return error?.data.code !== 'UNAUTHORIZED';
       }
       return true;
-    },
-    onError: (error) => {
-      console.error('Login error:', error);
-      return false;
     },
     onSuccess: ({ token }) => {
       localStorage.setItem('token', token);
@@ -55,6 +45,8 @@ export const LoginPage = () => {
       navigate(returnUrl);
     },
   });
+
+  console.error(login.error);
 
   const onSubmit = handleSubmit((data) => login.mutate(data));
 
@@ -71,6 +63,14 @@ export const LoginPage = () => {
         <Typography variant="h4" gutterBottom>
           Login
         </Typography>
+
+        {login.error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {login.error instanceof TRPCClientError
+              ? login.error.message
+              : 'An error occurred during login'}
+          </Alert>
+        )}
 
         <form onSubmit={onSubmit}>
           <TextField

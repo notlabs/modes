@@ -1,11 +1,1 @@
-export { User } from './schemas/user';
-
-export enum AuthErrorCode {
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
-  TOKEN_EXPIRED = 'TOKEN_EXPIRED',
-  TOKEN_INVALID = 'TOKEN_INVALID',
-  USER_NOT_FOUND = 'USER_NOT_FOUND',
-  INVALID_INPUT = 'INVALID_INPUT',
-  EMAIL_IN_USE = 'EMAIL_IN_USE',
-}
+export type { User } from './schemas/user';

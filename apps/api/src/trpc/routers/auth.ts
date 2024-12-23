@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { userSchema } from '../../schemas/user';
-import { AuthErrorCode } from '../../types';
 import { createToken, hashPassword, verifyPassword } from '../../utils/auth';
 import { protectedProcedure } from '../middleware/auth';
 import { publicProcedure, router } from '../router';
@@ -44,10 +43,8 @@ export const authRouter = router({
 
       if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
         throw new TRPCError({
-          code: 'BAD_REQUEST',
+          code: 'UNAUTHORIZED',
           message: 'Invalid credentials',
-          // Use cause which gets transformed to data.code by the error formatter
-          cause: AuthErrorCode.INVALID_CREDENTIALS,
         });
       }
 

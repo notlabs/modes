@@ -1,10 +1,10 @@
+import { createTheme, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { httpBatchLink, TRPCClientError } from '@trpc/client';
-import { useState } from 'react';
-import { trpc } from '../trpc';
-import { ThemeProvider, createTheme } from '@mui/material';
-import { HelmetProvider } from 'react-helmet-async';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { httpBatchLink, loggerLink, TRPCClientError } from '@trpc/client';
+import { useState } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
+import { trpc } from '../trpc';
 
 const theme = createTheme({
   palette: {
@@ -62,6 +62,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       links: [
         httpBatchLink({
           url: 'http://localhost:3000/api/trpc',
+        }),
+        loggerLink({
+          enabled: () => import.meta.env.DEV,
         }),
       ],
     })
