@@ -40,7 +40,7 @@ export const ErrorFallback = ({
       <Alert severity="error" icon={<ErrorIcon />}>
         <AlertTitle>
           <Typography variant="h6">
-            {isDev ? 'Development Error' : 'Something went wrong'}
+            {isDev ? 'Error' : 'Something went wrong'}
           </Typography>
         </AlertTitle>
 

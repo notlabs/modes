@@ -23,14 +23,15 @@ enum MediaVariant {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  email       String       @unique
-  name        String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  mediaItems  MediaItem[]
-  collections Collection[]
-  tags        Tag[]
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String
+  passwordHash  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  mediaItems    MediaItem[]
+  collections   Collection[]
+  tags          Tag[]
 
   @@map("users")
 }

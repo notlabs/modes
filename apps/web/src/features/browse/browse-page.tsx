@@ -22,7 +22,6 @@ export const BrowsePage = () => {
     page: paginationModel.page,
     limit: paginationModel.pageSize,
     sortField: sortModel[0]?.field,
-
     sortDirection: sortModel[0]?.sort as 'asc' | 'desc' | undefined,
   });
 

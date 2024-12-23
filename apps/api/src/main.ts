@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { appRouter } from './trpc/root';
-import { createContext } from './trpc/context';
+import { createContext } from './trpc/router';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;

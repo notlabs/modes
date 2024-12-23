@@ -12,6 +12,7 @@ export const Navigation = () => {
         <Tab label="Dashboard" value={routes.root.path} />
         <Tab label="Browse" value={routes.browse.path} />
         <Tab label="Collections" value={routes.collections.path} />
+        <Tab label="Admin" value={routes.admin.path} />
       </Tabs>
     </AppBar>
   );

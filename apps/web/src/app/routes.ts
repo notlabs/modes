@@ -19,6 +19,10 @@ export const routes = {
     path: '/browse' as const,
     params: null,
   },
+  admin: {
+    path: '/admin' as const,
+    params: null,
+  },
 } as const;
 
 export type AppRoute = typeof routes;
