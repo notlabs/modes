@@ -87,6 +87,13 @@ export const mediaRouter = router({
             mimeType: true,
             fileSize: true,
             checksum: true,
+            createdAt: true,
+            createdBy: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
             mediaVersions: {
               select: {
                 processedMedia: {
