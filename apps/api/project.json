@@ -8,6 +8,7 @@
       "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
+      "dependsOn": ["prisma-generate"],
       "options": {
         "platform": "node",
         "outputPath": "dist/apps/api",
@@ -36,6 +37,7 @@
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
+
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "api:build"
@@ -47,6 +49,41 @@
         "production": {
           "buildTarget": "api:build:production"
         }
+      }
+    },
+    "prisma-generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma generate",
+        "cwd": "apps/api"
+      }
+    },
+    "prisma-migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate dev",
+        "cwd": "apps/api"
+      }
+    },
+    "prisma-deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate deploy",
+        "cwd": "apps/api"
+      }
+    },
+    "prisma-reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate reset",
+        "cwd": "apps/api"
+      }
+    },
+    "prisma-studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma studio",
+        "cwd": "apps/api"
       }
     }
   }
