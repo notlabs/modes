@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,3 +45,23 @@ jobs:
 
       - uses: actions/deploy-pages@v4
         id: deployment
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    environment: production
+    steps:
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /opt/modes
+            git pull
+            pnpm install
+            docker-compose up -d --build
+            npx prisma migrate deploy
+          EOF
