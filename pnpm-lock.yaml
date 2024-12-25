@@ -8,15 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.10.2
       msw:
         specifier: ^2.7.0
         version: 2.7.0(@types/node@22.10.2)(typescript@5.6.3)
-      react-helmet-async:
-        specifier: ^2.0.5
-        version: 2.0.5(react@18.3.1)
       zod:
         specifier: ^3.24.1
         version: 3.24.1
@@ -90,6 +84,9 @@ importers:
       '@testing-library/react':
         specifier: 15.0.6
         version: 15.0.6(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.10.2
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.18.1
         version: 8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.6.3))(eslint@9.17.0)(typescript@5.6.3)
@@ -250,6 +247,9 @@ importers:
       react-error-boundary:
         specifier: ^5.0.0
         version: 5.0.0(react@18.3.1)
+      react-helmet-async:
+        specifier: ^2.0.5
+        version: 2.0.5(react@18.3.1)
       react-hook-form:
         specifier: ^7.54.2
         version: 7.54.2(react@18.3.1)
