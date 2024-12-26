@@ -1,11 +1,15 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import cors from 'cors';
+import * as dotenv from 'dotenv';
+import { expand } from 'dotenv-expand';
 import 'dotenv/config';
 import express from 'express';
 import { z } from 'zod';
 import { prisma } from './db/client';
 import { appRouter } from './trpc/root';
 import { createContext } from './trpc/router';
+
+expand(dotenv.config());
 
 const envSchema = z.object({
   API_HOST: z.string().default('localhost'),

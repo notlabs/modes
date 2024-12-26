@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
 import { z } from 'zod';
+import { Prisma } from '../../generated/client';
 import { protectedProcedure } from '../middleware/auth';
 import { router } from '../router';
 

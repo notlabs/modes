@@ -1,7 +1,7 @@
-import type { PrismaClient } from '@prisma/client';
 import { initTRPC } from '@trpc/server';
 import type { CreateNextContextOptions } from '@trpc/server/adapters/next';
 import { prisma } from '../db/client';
+import type { PrismaClient } from '../generated/client';
 
 type Context = {
   db: PrismaClient;

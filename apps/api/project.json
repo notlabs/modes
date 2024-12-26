@@ -4,6 +4,57 @@
   "sourceRoot": "apps/api/src",
   "projectType": "application",
   "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["build-esbuild"],
+      "options": {
+        "commands": [
+          "mkdir -p dist/apps/api/src/generated/client",
+          "cp -r apps/api/src/generated/client/*.node dist/apps/api/src/generated/client"
+        ],
+        "parallel": false
+      }
+    },
+    "build-esbuild": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["prisma-generate"],
+      "options": {
+        "platform": "node",
+        "target": "node20",
+        "outputPath": "dist/apps/api",
+        "main": "apps/api/src/main.ts",
+        "tsConfig": "apps/api/tsconfig.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/api/src/assets",
+            "output": ".",
+            "ignore": [".gitkeep"]
+          }
+        ],
+        "generatePackageJson": true,
+        "bundle": true,
+        "format": ["cjs"],
+        "esbuildOptions": {
+          "sourcemap": false,
+          "outExtension": {
+            ".js": ".js"
+          },
+          "minify": true
+        }
+      },
+      "configurations": {
+        "development": {
+          "minify": false
+        },
+        "production": {
+          "minify": true,
+          "sourcemap": false
+        }
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "development",
@@ -53,6 +104,18 @@
         "command": "prisma studio",
         "cwd": "apps/api"
       }
+    }
+  },
+  "targetDefaults": {
+    "api:serve": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "self",
+          "params": "forward",
+          "condition": "configuration === 'production'"
+        }
+      ]
     }
   }
 }
