@@ -57,10 +57,13 @@ jobs:
 
       - run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            whoami
             cd /opt/modes
             git fetch
             git reset --hard origin/main
             pnpm install
-            pnpm nx run prisma-migrate
+            pnpm nx run-many --target=build --all
+            pnpm prisma db push --schema apps/api/prisma/schema.prisma
             docker-compose up -d --build
           EOF
