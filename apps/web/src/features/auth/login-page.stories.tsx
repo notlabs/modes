@@ -1,6 +1,6 @@
+import { createMockHandler } from '@modes/api';
 import type { Meta, StoryObj } from '@storybook/react';
 import { expect, screen, userEvent } from '@storybook/test';
-import { createMockHandler } from 'apps/api';
 import { http, HttpResponse } from 'msw';
 import { LoginPage } from './login-page';
 

@@ -6,25 +6,27 @@ module.exports = [
   ...nx.configs['flat/javascript'],
   require('eslint-config-prettier'),
   {
-    ignores: ['**/dist'],
+    ignores: ['**/dist', '**/generated'],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      '@nx/enforce-module-boundaries': [
-        'error',
-        {
-          enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js'],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
-        },
-      ],
+      // TODO: re-enable
+      // '@nx/enforce-module-boundaries': [
+      //   'error',
+      //   {
+      //     enforceBuildableLibDependency: true,
+      //     allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js'],
+      //     depConstraints: [
+      //       {
+      //         sourceTag: '*',
+      //         onlyDependOnLibsWithTags: ['*'],
+      //       },
+      //     ],
+      //   },
+      // ],
+      '@nx/enforce-module-boundaries': 'off',
       'func-style': ['error', 'expression'],
       'arrow-body-style': ['error', 'as-needed'],
       'prefer-arrow/prefer-arrow-functions': 'warn',

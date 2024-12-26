@@ -38,36 +38,20 @@
         "bundle": true,
         "format": ["cjs"],
         "esbuildOptions": {
-          "sourcemap": false,
+          "sourcemap": true,
           "outExtension": {
             ".js": ".js"
           },
-          "minify": true
-        }
-      },
-      "configurations": {
-        "development": {
           "minify": false
-        },
-        "production": {
-          "minify": true,
-          "sourcemap": false
         }
       }
     },
     "serve": {
       "executor": "nx:run-commands",
-      "defaultConfiguration": "development",
       "dependsOn": ["prisma-generate"],
       "options": {
-        "command": "tsx watch apps/api/src/main.ts",
+        "command": "tsx watch --inspect apps/api/src/main.ts",
         "cwd": "."
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "command": "tsx apps/api/src/main.ts"
-        }
       }
     },
     "prisma-generate": {
@@ -104,18 +88,6 @@
         "command": "prisma studio",
         "cwd": "apps/api"
       }
-    }
-  },
-  "targetDefaults": {
-    "api:serve": {
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": "self",
-          "params": "forward",
-          "condition": "configuration === 'production'"
-        }
-      ]
     }
   }
 }
