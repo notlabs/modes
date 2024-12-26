@@ -1,5 +1,4 @@
-import { Box, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet-async';
+import { Typography } from '@mui/material';
 import { Page } from '../../shared/ui/page';
 
 export const CollectionsPage = () => (

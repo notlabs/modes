@@ -20,29 +20,29 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      # - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
-      - uses: nrwl/nx-set-shas@v4
+      # - run: pnpm install --frozen-lockfile
+      # - uses: nrwl/nx-set-shas@v4
 
-      # TODO: run tests
-      - run: pnpm exec nx affected -t lint build
+      # # TODO: run tests
+      # - run: pnpm exec nx affected -t lint build
 
-      - run: pnpm exec nx build-storybook web
+      # - run: pnpm exec nx build-storybook web
 
-      - uses: actions/configure-pages@v4
+      # - uses: actions/configure-pages@v4
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'apps/web/storybook-static'
+      # - uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: 'apps/web/storybook-static'
 
-      - uses: actions/deploy-pages@v4
-        id: deployment
+      # - uses: actions/deploy-pages@v4
+      #   id: deployment
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,20 +50,25 @@ jobs:
     needs: build
     environment: production
     steps:
-      - uses: shimataro/ssh-key-action@v2
+      - name: Execute deployment
+        uses: appleboy/ssh-action@master
         with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-      - run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-            whoami
+          timeout: 300s
+          script: |
+            set -ex
+            source ~/.bashrc
+            fnm use 20
+            echo "Node version: $(node -v)"
+            corepack enable
+            corepack prepare pnpm@latest --activate
             cd /opt/modes
             git fetch
             git reset --hard origin/main
             pnpm install
-            pnpm nx run-many --target=build --all
+            pnpm nx run-many --target=build --all --output-style=stream
             pnpm prisma db push --schema apps/api/prisma/schema.prisma
+            docker-compose down
             docker-compose up -d --build
-          EOF
