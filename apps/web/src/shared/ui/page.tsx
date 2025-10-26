@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet-async';
+import { Typography } from 'antd';
 import { ReactNode } from 'react';
+import { Helmet } from 'react-helmet-async';
+import styled from 'styled-components';
 
 type PageProps = {
   title?: string;
@@ -12,11 +13,13 @@ export const Page = ({ title, children }: PageProps) => (
     <Helmet>
       <title>{title ? `${title} | modes` : 'modes'}</title>
     </Helmet>
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        {title}
-      </Typography>
+    <Container>
+      {title && <Typography.Title level={4}>{title}</Typography.Title>}
       {children}
-    </Box>
+    </Container>
   </>
 );
+
+const Container = styled.div`
+  padding: 24px;
+`;

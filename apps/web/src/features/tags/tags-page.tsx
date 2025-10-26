@@ -1,33 +1,31 @@
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-} from '@mui/material';
-import { trpc } from '../../trpc';
+import { Card, List, Typography } from 'antd';
+import styled from 'styled-components';
 
 export const TagsPage = () => {
-  const { data: tags } = trpc.tags.listTags.useQuery();
+  const tags = [] as any[];
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
+    <Container>
+      <Typography.Title level={4} style={{ marginBottom: 16 }}>
         Tags
-      </Typography>
-      <Paper>
-        <List>
-          {tags?.map((tag) => (
-            <ListItem key={tag.id}>
-              <ListItemText
-                primary={tag.id}
-                secondary={`${tag.mediaTags.length} items`}
+      </Typography.Title>
+      <Card>
+        <List
+          dataSource={tags}
+          renderItem={(tag: any) => (
+            <List.Item>
+              <List.Item.Meta
+                title={tag.id}
+                description={`${tag.mediaTags?.length ?? 0} items`}
               />
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
-    </Box>
+            </List.Item>
+          )}
+        />
+      </Card>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 24px;
+`;

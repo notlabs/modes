@@ -1,35 +1,52 @@
-import { Box, LinearProgress, Typography } from '@mui/material';
-import { trpc } from '../../trpc';
+import { Progress, Typography } from 'antd';
 import prettyBytes from 'pretty-bytes';
+import styled from 'styled-components';
 import { Widget } from '../../shared/ui/widget';
 
 export const DiskUsageWidget = () => {
-  const { data: diskUsage } = trpc.system.getDiskUsage.useQuery();
+  const diskUsage = {} as any;
+  const percent = Math.round(diskUsage?.usedPercent || 0);
 
   return (
     <Widget title="Disk Usage">
-      <Box sx={{ width: '100%', maxWidth: 400 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <Box sx={{ width: '100%', mr: 1 }}>
-            <LinearProgress
-              variant="determinate"
-              value={diskUsage?.usedPercent || 0}
-              sx={{ height: 10, borderRadius: 5 }}
-            />
-          </Box>
-          <Box sx={{ minWidth: 35 }}>
-            <Typography variant="body2" color="text.secondary">
-              {`${Math.round(diskUsage?.usedPercent || 0)}%`}
-            </Typography>
-          </Box>
-        </Box>
+      <Container>
+        <Row>
+          <Grow>
+            <Progress percent={percent} showInfo={false} size="small" />
+          </Grow>
+          <Min>
+            <Typography.Text type="secondary">{`${percent}%`}</Typography.Text>
+          </Min>
+        </Row>
 
-        <Typography variant="caption" color="text.secondary">
+        <Typography.Text type="secondary">
           {`${prettyBytes(diskUsage?.used || 0)} used of ${prettyBytes(
             diskUsage?.total || 0
           )}`}
-        </Typography>
-      </Box>
+        </Typography.Text>
+      </Container>
     </Widget>
   );
 };
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 400px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const Grow = styled.div`
+  flex: 1;
+  margin-right: 8px;
+`;
+
+const Min = styled.div`
+  min-width: 35px;
+  text-align: right;
+  color: rgba(0, 0, 0, 0.45);
+`;

@@ -1,29 +1,34 @@
-import { Box } from '@mui/material';
-import { StatsWidgets } from './stats-widgets';
+import styled from 'styled-components';
 import { DiskUsageWidget } from './disk-usage-widget';
+import { StatsWidgets } from './stats-widgets';
 
 export const DashboardPage = () => (
-  <Box
-    sx={{
-      display: 'grid',
-      gap: 2,
-      gridTemplateColumns: {
-        xs: '1fr',
-        md: 'repeat(2, 1fr)',
-      },
-      p: 2,
-    }}
-  >
-    <Box sx={{ gridColumn: '1/-1' }}>
+  <Grid>
+    <Full>
       <DiskUsageWidget />
-    </Box>
-    <Box
-      sx={{
-        display: 'grid',
-        gap: 2,
-      }}
-    >
+    </Full>
+    <Inner>
       <StatsWidgets />
-    </Box>
-  </Box>
+    </Inner>
+  </Grid>
 );
+
+const Grid = styled.div`
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  padding: 16px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const Full = styled.div`
+  grid-column: 1 / -1;
+`;
+
+const Inner = styled.div`
+  display: grid;
+  gap: 16px;
+`;

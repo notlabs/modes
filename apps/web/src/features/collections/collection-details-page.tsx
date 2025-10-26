@@ -1,14 +1,17 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from 'antd';
 import { Helmet } from 'react-helmet-async';
+import styled from 'styled-components';
 
 export const CollectionDetailsPage = () => (
-  <Box sx={{ p: 3 }}>
+  <Container>
     <Helmet>
       <title>Collection | modes</title>
     </Helmet>
-    <Typography variant="h4" gutterBottom>
-      Collection Details
-    </Typography>
-    <Typography variant="body1">Placeholder</Typography>
-  </Box>
+    <Typography.Title level={4}>Collection Details</Typography.Title>
+    <Typography.Paragraph>Placeholder</Typography.Paragraph>
+  </Container>
 );
+
+const Container = styled.div`
+  padding: 24px;
+`;

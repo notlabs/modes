@@ -1,5 +1,6 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Card, Typography } from 'antd';
 import type { ReactNode } from 'react';
+import styled from 'styled-components';
 
 type WidgetProps = {
   title: string;
@@ -7,16 +8,15 @@ type WidgetProps = {
 };
 
 export const Widget = ({ title, children }: WidgetProps) => (
-  <Paper
-    sx={{
-      p: 3,
-      height: '100%',
-      borderRadius: 2,
-    }}
-  >
-    <Typography variant="h6" gutterBottom>
+  <CardStyled>
+    <Typography.Title level={5} style={{ marginBottom: 16 }}>
       {title}
-    </Typography>
-    <Box>{children}</Box>
-  </Paper>
+    </Typography.Title>
+    <div>{children}</div>
+  </CardStyled>
 );
+
+const CardStyled = styled(Card)`
+  height: 100%;
+  border-radius: 8px;
+`;

@@ -1,3 +1,4 @@
+import 'antd/dist/reset.css';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { Providers } from './app/providers';
@@ -10,7 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <StrictMode>
     <Providers>
-      <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
+      <div
+        style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}
+      >
         <Hamster width={200} height={200} />
       </div>
     </Providers>

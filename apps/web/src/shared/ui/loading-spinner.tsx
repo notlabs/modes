@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import type { CSSProperties } from 'react';
+import styled from 'styled-components';
 import { Hamster } from './hamster';
 
 type LoadingSpinnerProps = {
@@ -14,7 +15,7 @@ export const LoadingSpinner = ({
   fullScreen = false,
   count = 3,
 }: LoadingSpinnerProps) => {
-  const containerStyles = fullScreen
+  const containerStyles: CSSProperties | undefined = fullScreen
     ? {
         position: 'fixed',
         top: 0,
@@ -24,21 +25,13 @@ export const LoadingSpinner = ({
         zIndex: 9999,
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
       }
-    : {};
+    : undefined;
 
   const speed = 0.5;
   const delayOffset = speed / count;
 
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      height="100%"
-      width="100%"
-      gap={2}
-      sx={containerStyles}
-    >
+    <Container style={containerStyles} aria-busy={true}>
       {Array.from({ length: count }, (_, index) => (
         <Hamster
           key={index}
@@ -48,6 +41,15 @@ export const LoadingSpinner = ({
           speed={speed}
         />
       ))}
-    </Box>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  gap: 16px;
+`;
