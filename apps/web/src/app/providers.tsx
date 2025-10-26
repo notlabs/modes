@@ -1,5 +1,5 @@
 import { ConfigProvider } from 'antd';
-import { JazzReactProvider } from 'jazz-tools/src/react';
+import { JazzReactProvider } from 'jazz-tools/react';
 import React from 'react';
 
 export const Providers = ({ children }: { children: React.ReactNode }) => (
