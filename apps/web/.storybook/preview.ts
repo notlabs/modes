@@ -1,11 +1,8 @@
 import type { Preview } from '@storybook/react';
-import { initialize, mswDecorator } from 'msw-storybook-addon';
 import { withProviders } from './helpers';
 
-initialize();
-
 const preview: Preview = {
-  decorators: [mswDecorator, withProviders],
+  decorators: [withProviders],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {

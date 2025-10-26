@@ -2,10 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "types": [
-      "@nx/react/typings/image.d.ts",
-      "vite/client"
-    ]
+    "types": ["@nx/react/typings/image.d.ts", "vite/client"]
   },
   "exclude": [
     "src/**/*.spec.ts",

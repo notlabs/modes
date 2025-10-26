@@ -1,11 +1,7 @@
 import { StrictMode } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import * as ReactDOM from 'react-dom/client';
 import { Providers } from './app/providers';
-import { RoutesConfig } from './app/routes-config';
-import { ErrorBoundary } from 'react-error-boundary';
-import { ErrorFallback } from './app/error-fallback';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { Hamster } from './shared/ui/hamster';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,16 +9,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <BrowserRouter>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
-            <Providers>
-              <RoutesConfig />
-            </Providers>
-          </ErrorBoundary>
-        )}
-      </QueryErrorResetBoundary>
-    </BrowserRouter>
+    <Providers>
+      <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center' }}>
+        <Hamster width={200} height={200} />
+      </div>
+    </Providers>
   </StrictMode>
 );
